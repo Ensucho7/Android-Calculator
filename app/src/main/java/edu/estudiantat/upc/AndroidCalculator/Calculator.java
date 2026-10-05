@@ -53,14 +53,24 @@ public class Calculator {
         double a = stored;
         double b = value();
         String op = pending;
-        current = text(calculate(a, b, op));
+        if (calculate(a, b, op) == Double.POSITIVE_INFINITY){
+            current = "Infinity";
+        }
+        else {
+            current = text(calculate(a, b, op));
+        }
         expression = text(a) + " " + op + " " + text(b) + " =";
         pending = "";
     }
 
     public void trig(String op) {
         double a = value();
-        current = text(calculate(a, op));
+        if (calculate(a, op) == Double.POSITIVE_INFINITY){
+            current = "Infinity";
+        }
+        else {
+            current = text(calculate(a, op));
+        }
         expression = op + "(" + text(a) + ") =";
     }
 
@@ -87,7 +97,7 @@ public class Calculator {
         }
         if (op.equals("÷")) {
             if (b == 0) {
-                return 0;
+                return Double.POSITIVE_INFINITY;
             }
             return a / b;
         }
@@ -99,10 +109,16 @@ public class Calculator {
         if (op.equals("Sin")) {
             return Math.sin(r);
         }
-        if (op.equals("Cos")) {
+        else if (op.equals("Cos")) {
             return Math.cos(r);
         }
-        return Math.tan(r);
+        else {
+            double coseno = Math.cos(r);
+            if (Math.abs(coseno) < 1e-15) {
+                return Double.POSITIVE_INFINITY;
+            }
+            return Math.tan(r);
+        }
     }
 
     private String text(double number) {
